@@ -25,6 +25,7 @@ import {
 import toast from 'react-hot-toast';
 
 import PageWrapper from '../components/layout/PageWrapper';
+import { SkeletonCard } from '../components/ui/Skeleton';
 import api from '../services/api';
 
 const fmtDate = (d) =>
@@ -169,6 +170,20 @@ const Dashboard = () => {
         Dashboard
       </h1>
 
+      {loading ? (
+        <div className="space-y-6">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            {[0, 1, 2, 3].map((i) => (
+              <SkeletonCard key={i} height="6rem" />
+            ))}
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            <SkeletonCard height="20rem" />
+            <SkeletonCard height="20rem" />
+          </div>
+        </div>
+      ) : (
+        <>
       {/* Stats row */}
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         <StatCard icon={ListChecks} label="Total Sessions" value={stats?.totalSessions ?? 0} />
@@ -248,6 +263,9 @@ const Dashboard = () => {
           )}
         </div>
       </div>
+
+        </>
+      )}
 
       {/* Recent sessions table */}
       <div className="mt-6 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5">

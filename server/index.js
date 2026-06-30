@@ -4,6 +4,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import rateLimit from 'express-rate-limit';
 import { Server as SocketIOServer } from 'socket.io';
 
 import connectDB from './config/db.js';
@@ -34,6 +35,12 @@ app.use(
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// --- Rate limiting ---
+const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
+const strictLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 20 });
+app.use('/api/', limiter);
+app.use('/api/auth/', strictLimiter);
 
 // --- Health check ---
 app.get('/api/health', (req, res) => {
