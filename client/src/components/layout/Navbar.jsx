@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Brain, Sun, Moon, Menu, X, LogOut } from 'lucide-react';
+import { Brain, Menu, X, LogOut } from 'lucide-react';
 
 import api from '../../services/api';
+import ThemeSelector from '../ThemeSelector';
 
 const NAV_LINKS = [
   { to: '/dashboard', label: 'Dashboard' },
@@ -22,11 +23,6 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [user, setUser] = useState(null);
-  const [dark, setDark] = useState(
-    () =>
-      typeof document !== 'undefined' &&
-      document.documentElement.classList.contains('dark')
-  );
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -45,14 +41,6 @@ const Navbar = () => {
     setMenuOpen(false);
   }, [location.pathname]);
 
-  const toggleTheme = () => {
-    const el = document.documentElement;
-    el.classList.toggle('dark');
-    const isDark = el.classList.contains('dark');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    setDark(isDark);
-  };
-
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -62,16 +50,16 @@ const Navbar = () => {
   const linkClass = ({ isActive }) =>
     `text-sm font-medium transition ${
       isActive
-        ? 'text-indigo-600 dark:text-indigo-400'
+        ? 'text-brand-600 dark:text-brand-400'
         : 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'
     }`;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200 dark:border-slate-700 bg-white/90 dark:bg-slate-900/90 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-slate-200/60 dark:border-slate-700/60 bg-surface-light/90 dark:bg-surface-dark/90 backdrop-blur">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
         {/* Logo */}
         <NavLink to="/dashboard" className="flex items-center gap-2">
-          <Brain className="h-6 w-6 text-indigo-600" />
+          <Brain className="h-6 w-6 text-brand-600" />
           <span className="text-lg font-bold text-slate-900 dark:text-white">
             InterviewAI
           </span>
@@ -88,17 +76,10 @@ const Navbar = () => {
 
         {/* Right cluster */}
         <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={toggleTheme}
-            aria-label="Toggle dark mode"
-            className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
-          >
-            {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </button>
+          <ThemeSelector />
 
           <div
-            className="hidden h-9 w-9 items-center justify-center rounded-full bg-indigo-600 text-sm font-semibold text-white sm:flex"
+            className="hidden h-9 w-9 items-center justify-center rounded-full bg-brand-600 text-sm font-semibold text-white sm:flex"
             title={user?.name || 'User'}
           >
             {initialsOf(user?.name)}
@@ -126,7 +107,7 @@ const Navbar = () => {
 
       {/* Mobile slide-down */}
       {menuOpen && (
-        <div className="border-t border-slate-200 dark:border-slate-700 md:hidden">
+        <div className="border-t border-slate-200/60 dark:border-slate-700/60 md:hidden">
           <div className="space-y-1 px-4 py-3">
             {NAV_LINKS.map((l) => (
               <NavLink
@@ -141,7 +122,7 @@ const Navbar = () => {
             <button
               type="button"
               onClick={logout}
-              className="flex w-full items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30"
+              className="flex w-full items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-danger-500 hover:bg-danger-500/10"
             >
               <LogOut className="h-4 w-4" /> Logout
             </button>

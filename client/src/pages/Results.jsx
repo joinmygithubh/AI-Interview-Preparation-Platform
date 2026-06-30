@@ -18,9 +18,9 @@ import api from '../services/api';
 const CIRCUMFERENCE = 314; // 2 * pi * 50
 
 const scoreColor = (s) => {
-  if (s >= 75) return '#22c55e';
-  if (s >= 50) return '#f59e0b';
-  return '#ef4444';
+  if (s >= 75) return '#10B981';
+  if (s >= 50) return '#F59E0B';
+  return '#EF4444';
 };
 
 const HeroScore = ({ score }) => {
@@ -45,7 +45,13 @@ const HeroScore = ({ score }) => {
 
   return (
     <div className="relative h-[120px] w-[120px]">
-      <svg className="h-[120px] w-[120px] -rotate-90" viewBox="0 0 120 120">
+      {/* Signature glow — colored by score status, hidden in B&W mode */}
+      <div
+        aria-hidden="true"
+        className="score-glow pointer-events-none absolute inset-0 -z-0 rounded-full blur-2xl opacity-40"
+        style={{ backgroundColor: color }}
+      />
+      <svg className="relative z-10 h-[120px] w-[120px] -rotate-90" viewBox="0 0 120 120">
         <circle cx="60" cy="60" r="50" fill="none" strokeWidth="10" className="stroke-slate-200 dark:stroke-slate-700" />
         <circle
           cx="60"
@@ -59,7 +65,7 @@ const HeroScore = ({ score }) => {
           strokeDashoffset={offset}
         />
       </svg>
-      <div className="absolute inset-0 flex items-center justify-center">
+      <div className="absolute inset-0 z-10 flex items-center justify-center">
         <span className="text-3xl font-bold" style={{ color }}>
           {display}
         </span>
@@ -69,7 +75,7 @@ const HeroScore = ({ score }) => {
 };
 
 const Card = ({ title, children }) => (
-  <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5">
+  <div className="rounded-2xl border border-slate-200/60 dark:border-slate-700/60 bg-surface-light dark:bg-slate-800/60 p-5">
     <h3 className="mb-3 font-semibold text-slate-900 dark:text-white">{title}</h3>
     {children}
   </div>
@@ -114,7 +120,7 @@ const QuestionRow = ({ q, index }) => {
             <div className="space-y-3 pb-4 text-sm">
               <p className="font-medium text-slate-800 dark:text-slate-100">{q.questionText}</p>
               {q.userAnswer && (
-                <blockquote className="border-l-4 border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 p-3 text-slate-600 dark:text-slate-300">
+                <blockquote className="border-l-4 border-slate-300 dark:border-slate-600 bg-surface-light dark:bg-slate-800 p-3 text-slate-600 dark:text-slate-300">
                   {q.userAnswer}
                 </blockquote>
               )}
@@ -184,7 +190,7 @@ const Results = () => {
     return (
       <PageWrapper>
         <div className="flex h-[60vh] items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-indigo-500" />
+          <Loader2 className="h-8 w-8 animate-spin text-brand-500" />
         </div>
       </PageWrapper>
     );
@@ -204,7 +210,7 @@ const Results = () => {
   return (
     <PageWrapper>
       {/* Hero */}
-      <div className="flex flex-col items-center gap-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-8 text-center">
+      <div className="flex flex-col items-center gap-4 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 bg-surface-light dark:bg-slate-800/60 p-8 text-center">
         <HeroScore score={score} />
         <div>
           <p className="text-lg font-semibold text-slate-900 dark:text-white">
@@ -226,7 +232,7 @@ const Results = () => {
           <ul className="space-y-2">
             {(summary.strengths || []).map((s, i) => (
               <li key={i} className="flex gap-2 text-sm text-slate-600 dark:text-slate-300">
-                <CheckCircle2 className="h-4 w-4 shrink-0 text-green-500" /> {s}
+                <CheckCircle2 className="h-4 w-4 shrink-0 text-success-500" /> {s}
               </li>
             ))}
             {!(summary.strengths || []).length && (
@@ -239,7 +245,7 @@ const Results = () => {
           <ul className="space-y-2">
             {(summary.weaknesses || []).map((w, i) => (
               <li key={i} className="flex gap-2 text-sm text-slate-600 dark:text-slate-300">
-                <AlertTriangle className="h-4 w-4 shrink-0 text-amber-500" /> {w}
+                <AlertTriangle className="h-4 w-4 shrink-0 text-warning-500" /> {w}
               </li>
             ))}
             {!(summary.weaknesses || []).length && (
@@ -252,7 +258,7 @@ const Results = () => {
           <ol className="space-y-2">
             {(summary.recommendations || []).map((r, i) => (
               <li key={i} className="flex gap-2 text-sm text-slate-600 dark:text-slate-300">
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-semibold text-indigo-600 dark:bg-indigo-900/40 dark:text-indigo-300">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-100 text-xs font-semibold text-brand-600 dark:bg-brand-900/40 dark:text-brand-300">
                   {i + 1}
                 </span>
                 {r}
@@ -266,7 +272,7 @@ const Results = () => {
       </div>
 
       {/* Question breakdown */}
-      <div className="mt-6 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5">
+      <div className="mt-6 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 bg-surface-light dark:bg-slate-800/60 p-5">
         <h3 className="mb-2 font-semibold text-slate-900 dark:text-white">
           Question breakdown
         </h3>
@@ -281,7 +287,7 @@ const Results = () => {
           type="button"
           onClick={downloadReport}
           disabled={downloading}
-          className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 font-medium text-white hover:bg-indigo-700 disabled:opacity-60"
+          className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-brand-600 to-brand-500 px-4 py-2.5 font-medium text-white shadow-lg shadow-brand-500/20 hover:from-brand-700 hover:to-brand-600 disabled:opacity-60"
         >
           {downloading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
           Download report
@@ -289,14 +295,14 @@ const Results = () => {
         <button
           type="button"
           onClick={() => navigate('/upload')}
-          className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-slate-300 dark:border-slate-600 px-4 py-2.5 font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+          className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-slate-300 dark:border-slate-600 px-4 py-2.5 font-medium text-slate-700 dark:text-slate-200 hover:bg-surface-light dark:hover:bg-slate-800"
         >
           <RotateCcw className="h-4 w-4" /> Practice again
         </button>
         <button
           type="button"
           onClick={shareScore}
-          className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-slate-300 dark:border-slate-600 px-4 py-2.5 font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+          className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-slate-300 dark:border-slate-600 px-4 py-2.5 font-medium text-slate-700 dark:text-slate-200 hover:bg-surface-light dark:hover:bg-slate-800"
         >
           <Share2 className="h-4 w-4" /> Share score
         </button>

@@ -1,7 +1,7 @@
 import { Briefcase, GraduationCap, Sparkles } from 'lucide-react';
 
 const SKILL_COLORS = [
-  'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300',
+  'bg-brand-100 text-brand-700 dark:bg-brand-900/40 dark:text-brand-300',
   'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300',
   'bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-300',
 ];
@@ -18,9 +18,9 @@ const ResumeCard = ({ resume, summary }) => {
   const education = resume.education || [];
 
   return (
-    <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm space-y-8">
+    <div className="rounded-2xl border border-slate-200/60 dark:border-slate-700/60 bg-surface-light dark:bg-slate-800/60 p-6 shadow-sm transition-shadow duration-150 hover:shadow-md space-y-8">
       <header className="flex items-center gap-2">
-        <Sparkles className="h-5 w-5 text-indigo-500" />
+        <Sparkles className="h-5 w-5 text-brand-500" />
         <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
           Parsed Resume
         </h3>
@@ -59,10 +59,10 @@ const ResumeCard = ({ resume, summary }) => {
           <h4 className="mb-4 flex items-center gap-2 text-sm font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
             <Briefcase className="h-4 w-4" /> Experience
           </h4>
-          <ol className="relative border-l border-slate-200 dark:border-slate-700 ml-2">
+          <ol className="relative border-l border-slate-200/60 dark:border-slate-700/60 ml-2">
             {experience.map((exp, i) => (
               <li key={i} className="mb-6 ml-6 last:mb-0">
-                <span className="absolute -left-[7px] mt-1.5 h-3.5 w-3.5 rounded-full border-2 border-white dark:border-slate-900 bg-indigo-500" />
+                <span className="absolute -left-[7px] mt-1.5 h-3.5 w-3.5 rounded-full border-2 border-white dark:border-slate-900 bg-brand-500" />
                 <h5 className="font-semibold text-slate-900 dark:text-slate-100">
                   {exp.title}
                   {exp.company ? (

@@ -23,8 +23,8 @@ class ErrorBoundary extends Component {
     if (!this.state.hasError) return this.props.children;
 
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4 dark:bg-slate-900">
-        <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
+      <div className="flex min-h-screen items-center justify-center bg-surface-light p-4 dark:bg-surface-dark">
+        <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-surface-light p-8 text-center shadow-sm transition-shadow duration-150 hover:shadow-md dark:border-slate-700 dark:bg-slate-800">
           <h1 className="text-xl font-bold text-slate-900 dark:text-white">
             Something went wrong
           </h1>
@@ -34,7 +34,7 @@ class ErrorBoundary extends Component {
           <button
             type="button"
             onClick={() => window.location.reload()}
-            className="mt-6 rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white transition hover:bg-indigo-700"
+            className="mt-6 rounded-lg bg-brand-600 px-4 py-2 font-medium text-white transition hover:bg-brand-700"
           >
             Reload page
           </button>

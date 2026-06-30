@@ -18,7 +18,7 @@ const DIFFICULTY_BADGE = {
 const fmtDate = (d) =>
   new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
-const ringColor = (s) => (s >= 75 ? '#22c55e' : s >= 50 ? '#f59e0b' : '#ef4444');
+const ringColor = (s) => (s >= 75 ? '#10B981' : s >= 50 ? '#F59E0B' : '#EF4444');
 
 const SmallRing = ({ score = 0 }) => {
   const offset = CIRC * (1 - Math.max(0, Math.min(100, score)) / 100);
@@ -85,7 +85,7 @@ const History = () => {
   }, [data.sessions, dateFrom, dateTo, difficulty, minScore, sort]);
 
   const inputClass =
-    'rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-indigo-500';
+    'rounded-lg border border-slate-300 dark:border-slate-700 bg-surface-light dark:bg-slate-800/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-brand-500';
 
   return (
     <PageWrapper>
@@ -95,7 +95,7 @@ const History = () => {
           <button
             type="button"
             onClick={() => setView('card')}
-            className={`rounded-md p-1.5 ${view === 'card' ? 'bg-indigo-600 text-white' : 'text-slate-500'}`}
+            className={`rounded-md p-1.5 ${view === 'card' ? 'bg-brand-600 text-white' : 'text-slate-500'}`}
             aria-label="Card view"
           >
             <LayoutGrid className="h-4 w-4" />
@@ -103,7 +103,7 @@ const History = () => {
           <button
             type="button"
             onClick={() => setView('table')}
-            className={`rounded-md p-1.5 ${view === 'table' ? 'bg-indigo-600 text-white' : 'text-slate-500'}`}
+            className={`rounded-md p-1.5 ${view === 'table' ? 'bg-brand-600 text-white' : 'text-slate-500'}`}
             aria-label="Table view"
           >
             <List className="h-4 w-4" />
@@ -112,7 +112,7 @@ const History = () => {
       </div>
 
       {/* Filter bar */}
-      <div className="mb-6 flex flex-wrap items-end gap-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4">
+      <div className="mb-6 flex flex-wrap items-end gap-3 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 bg-surface-light dark:bg-slate-800/60 p-4">
         <label className="flex flex-col gap-1 text-xs text-slate-500 dark:text-slate-400">
           From
           <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className={inputClass} />
@@ -155,18 +155,23 @@ const History = () => {
 
       {loading ? (
         <div className="flex h-64 items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-indigo-500" />
+          <Loader2 className="h-8 w-8 animate-spin text-brand-500" />
         </div>
       ) : !visible.length ? (
-        <div className="py-16 text-center text-slate-500 dark:text-slate-400">
-          No sessions match your filters.
+        <div className="flex flex-col items-center gap-3 py-16 text-center">
+          <svg width="64" height="64" viewBox="0 0 64 64" className="text-brand-500">
+            <circle cx="28" cy="28" r="18" fill="none" stroke="currentColor" strokeWidth="2.5" />
+            <line x1="41" y1="41" x2="54" y2="54" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+            <line x1="22" y1="28" x2="34" y2="28" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+          </svg>
+          <p className="text-slate-500 dark:text-slate-400">No sessions match your filters.</p>
         </div>
       ) : view === 'card' ? (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {visible.map((s) => (
             <div
               key={s._id}
-              className="flex flex-col gap-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5"
+              className="flex flex-col gap-3 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 bg-surface-light dark:bg-slate-800/60 p-5"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -185,7 +190,7 @@ const History = () => {
               </div>
               <Link
                 to={`/results/${s._id}`}
-                className="mt-auto rounded-lg bg-indigo-600 px-3 py-2 text-center text-sm font-medium text-white hover:bg-indigo-700"
+                className="mt-auto rounded-lg bg-brand-600 px-3 py-2 text-center text-sm font-medium text-white hover:bg-brand-700"
               >
                 View results
               </Link>
@@ -193,10 +198,10 @@ const History = () => {
           ))}
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+        <div className="overflow-x-auto rounded-2xl border border-slate-200/60 dark:border-slate-700/60 bg-surface-light dark:bg-slate-800/60">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400">
+              <tr className="border-b border-slate-200/60 dark:border-slate-700/60 text-slate-500 dark:text-slate-400">
                 <th className="p-4 font-medium">Date</th>
                 <th className="p-4 font-medium">Role</th>
                 <th className="p-4 font-medium">Difficulty</th>
@@ -220,7 +225,7 @@ const History = () => {
                   </td>
                   <td className="p-4">{typeof s.duration === 'number' ? `${s.duration} min` : '—'}</td>
                   <td className="p-4">
-                    <Link to={`/results/${s._id}`} className="font-medium text-indigo-600 hover:underline dark:text-indigo-400">
+                    <Link to={`/results/${s._id}`} className="font-medium text-brand-600 hover:underline dark:text-brand-400">
                       View results
                     </Link>
                   </td>

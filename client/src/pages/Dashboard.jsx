@@ -52,9 +52,9 @@ const STATUS_PILL = {
 
 const scoreBadge = (s) => {
   if (s == null) return 'bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-300';
-  if (s >= 75) return 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300';
-  if (s >= 50) return 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300';
-  return 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300';
+  if (s >= 75) return 'bg-success-500/10 text-success-600 dark:bg-success-500/20 dark:text-success-400';
+  if (s >= 50) return 'bg-warning-500/10 text-warning-500 dark:bg-warning-500/20 dark:text-warning-400';
+  return 'bg-danger-500/10 text-danger-500 dark:bg-danger-500/20 dark:text-danger-400';
 };
 
 const RADAR_KEYS = [
@@ -66,7 +66,7 @@ const RADAR_KEYS = [
 ];
 
 const StatCard = ({ icon: Icon, label, value, extra }) => (
-  <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5">
+  <div className="rounded-2xl border border-slate-200/60 dark:border-slate-700/60 bg-surface-light dark:bg-slate-800/60 p-5">
     <div className="flex items-center justify-between">
       <span className="text-sm text-slate-500 dark:text-slate-400">{label}</span>
       {Icon && <Icon className="h-4 w-4 text-slate-400" />}
@@ -82,10 +82,10 @@ const LineTooltip = ({ active, payload }) => {
   if (!active || !payload?.length) return null;
   const p = payload[0].payload;
   return (
-    <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-2 text-xs shadow">
+    <div className="rounded-lg border border-slate-200/60 dark:border-slate-700/60 bg-surface-light dark:bg-slate-800/60 p-2 text-xs shadow">
       <div className="font-medium text-slate-700 dark:text-slate-200">{p.fullDate}</div>
       <div className="text-slate-500 dark:text-slate-400">{p.jobRole}</div>
-      <div className="text-indigo-600 dark:text-indigo-400">Score: {p.score}</div>
+      <div className="text-brand-600 dark:text-brand-400">Score: {p.score}</div>
     </div>
   );
 };
@@ -195,7 +195,7 @@ const Dashboard = () => {
             trend !== 0 && (
               <span
                 className={`flex items-center text-xs font-medium ${
-                  trend > 0 ? 'text-green-500' : 'text-red-500'
+                  trend > 0 ? 'text-success-500' : 'text-danger-500'
                 }`}
               >
                 {trend > 0 ? (
@@ -214,7 +214,7 @@ const Dashboard = () => {
 
       {/* Charts row */}
       <div className="mt-6 grid gap-4 md:grid-cols-2">
-        <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5">
+        <div className="rounded-2xl border border-slate-200/60 dark:border-slate-700/60 bg-surface-light dark:bg-slate-800/60 p-5">
           <h3 className="mb-3 font-semibold text-slate-900 dark:text-white">
             Score trend
           </h3>
@@ -228,7 +228,7 @@ const Dashboard = () => {
                 <Line
                   type="monotone"
                   dataKey="score"
-                  stroke="#6366f1"
+                  stroke="#6D28D9"
                   strokeWidth={2}
                   dot={{ r: 3 }}
                   activeDot={{ r: 5 }}
@@ -240,7 +240,7 @@ const Dashboard = () => {
           )}
         </div>
 
-        <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5">
+        <div className="rounded-2xl border border-slate-200/60 dark:border-slate-700/60 bg-surface-light dark:bg-slate-800/60 p-5">
           <h3 className="mb-3 font-semibold text-slate-900 dark:text-white">
             Skills analysis
           </h3>
@@ -252,8 +252,8 @@ const Dashboard = () => {
                 <PolarRadiusAxis domain={[0, 100]} tick={{ fontSize: 10 }} />
                 <Radar
                   dataKey="value"
-                  stroke="#6366f1"
-                  fill="#c7d2fe"
+                  stroke="#6D28D9"
+                  fill="#C4B5FD"
                   fillOpacity={0.5}
                 />
               </RadarChart>
@@ -268,7 +268,7 @@ const Dashboard = () => {
       )}
 
       {/* Recent sessions table */}
-      <div className="mt-6 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5">
+      <div className="mt-6 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 bg-surface-light dark:bg-slate-800/60 p-5">
         <h3 className="mb-4 font-semibold text-slate-900 dark:text-white">
           Recent sessions
         </h3>
@@ -277,7 +277,7 @@ const Dashboard = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400">
+                <tr className="border-b border-slate-200/60 dark:border-slate-700/60 text-slate-500 dark:text-slate-400">
                   <th className="py-2 pr-4 font-medium">Date</th>
                   <th className="py-2 pr-4 font-medium">Role</th>
                   <th className="py-2 pr-4 font-medium">Difficulty</th>
@@ -313,14 +313,14 @@ const Dashboard = () => {
                       <div className="flex items-center gap-3">
                         <Link
                           to={`/results/${s._id}`}
-                          className="font-medium text-indigo-600 hover:underline dark:text-indigo-400"
+                          className="font-medium text-brand-600 hover:underline dark:text-brand-400"
                         >
                           Results
                         </Link>
                         <button
                           type="button"
                           onClick={() => handleDelete(s._id)}
-                          className="flex items-center gap-1 text-red-500 hover:text-red-600"
+                          className="flex items-center gap-1 text-danger-500 hover:text-danger-400"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -334,16 +334,16 @@ const Dashboard = () => {
         ) : (
           !loading && (
             <div className="flex flex-col items-center gap-3 py-10 text-center">
-              <svg width="64" height="64" viewBox="0 0 64 64" className="text-slate-300 dark:text-slate-600">
-                <circle cx="32" cy="32" r="28" fill="none" stroke="currentColor" strokeWidth="3" />
-                <circle cx="23" cy="26" r="3" fill="currentColor" />
-                <circle cx="41" cy="26" r="3" fill="currentColor" />
-                <path d="M22 42 Q32 34 42 42" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+              <svg width="64" height="64" viewBox="0 0 64 64" className="text-brand-500">
+                <circle cx="32" cy="32" r="28" fill="none" stroke="currentColor" strokeWidth="2.5" />
+                <circle cx="23" cy="26" r="2.5" fill="currentColor" />
+                <circle cx="41" cy="26" r="2.5" fill="currentColor" />
+                <path d="M22 40 Q32 48 42 40" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
               </svg>
               <p className="text-slate-500 dark:text-slate-400">No interviews yet</p>
               <Link
                 to="/upload"
-                className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+                className="rounded-lg bg-gradient-to-r from-brand-600 to-brand-500 px-4 py-2 text-sm font-medium text-white shadow-lg shadow-brand-500/20 hover:from-brand-700 hover:to-brand-600"
               >
                 Start your first interview
               </Link>

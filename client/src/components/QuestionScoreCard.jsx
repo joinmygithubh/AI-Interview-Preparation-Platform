@@ -6,9 +6,9 @@ const CIRCUMFERENCE = 251; // 2 * pi * 40
 
 /** Color the ring/score by band: <50 red, <75 amber, >=75 green. */
 const scoreColor = (score) => {
-  if (score >= 75) return { stroke: '#22c55e', text: 'text-green-500' };
-  if (score >= 50) return { stroke: '#f59e0b', text: 'text-amber-500' };
-  return { stroke: '#ef4444', text: 'text-red-500' };
+  if (score >= 75) return { stroke: '#10B981', text: 'text-success-500' };
+  if (score >= 50) return { stroke: '#F59E0B', text: 'text-warning-500' };
+  return { stroke: '#EF4444', text: 'text-danger-500' };
 };
 
 const TABS = [
@@ -84,7 +84,7 @@ const QuestionScoreCard = ({ result }) => {
       initial={{ opacity: 0, x: 50 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.4, ease: 'easeOut' }}
-      className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm"
+      className="rounded-2xl border border-slate-200/60 dark:border-slate-700/60 bg-surface-light dark:bg-slate-800/60 p-5 shadow-sm transition-shadow duration-150 hover:shadow-md"
     >
       <div className="flex items-center gap-4">
         <ScoreRing score={score} />
@@ -111,7 +111,7 @@ const QuestionScoreCard = ({ result }) => {
             onClick={() => setActiveTab(tab.key)}
             className={`flex-1 rounded-md px-3 py-1.5 text-sm font-medium transition ${
               activeTab === tab.key
-                ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-sm'
+                ? 'bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-300 shadow-sm transition-shadow duration-150 hover:shadow-md'
                 : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
             }`}
           >
@@ -131,14 +131,14 @@ const QuestionScoreCard = ({ result }) => {
           <ListContent
             items={result.strengths}
             emptyLabel="No specific strengths noted."
-            dotClass="bg-green-500"
+            dotClass="bg-success-500"
           />
         )}
         {activeTab === 'improvements' && (
           <ListContent
             items={result.improvements}
             emptyLabel="No improvements noted."
-            dotClass="bg-amber-500"
+            dotClass="bg-warning-500"
           />
         )}
       </div>
@@ -149,7 +149,7 @@ const QuestionScoreCard = ({ result }) => {
           <button
             type="button"
             onClick={() => setShowExample((v) => !v)}
-            className="flex w-full items-center gap-1.5 text-sm font-medium text-indigo-600 dark:text-indigo-400"
+            className="flex w-full items-center gap-1.5 text-sm font-medium text-brand-600 dark:text-brand-400"
           >
             {showExample ? (
               <ChevronDown className="h-4 w-4" />
@@ -167,7 +167,7 @@ const QuestionScoreCard = ({ result }) => {
                 transition={{ duration: 0.25 }}
                 className="overflow-hidden"
               >
-                <p className="mt-2 rounded-lg bg-slate-50 dark:bg-slate-800 p-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                <p className="mt-2 rounded-lg bg-surface-light dark:bg-slate-800 p-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
                   {result.exampleAnswer}
                 </p>
               </motion.div>

@@ -29,13 +29,13 @@ const Login = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 dark:bg-slate-900">
+    <div className="flex min-h-screen items-center justify-center bg-surface-light px-4 dark:bg-surface-dark">
       <form
         onSubmit={onSubmit}
-        className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-700 dark:bg-slate-800"
+        className="w-full max-w-sm rounded-2xl border border-slate-200 bg-surface-light p-8 shadow-sm transition-shadow duration-150 hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
       >
         <div className="mb-6 flex items-center gap-2">
-          <Brain className="h-6 w-6 text-indigo-600" />
+          <Brain className="h-6 w-6 text-brand-600" />
           <span className="text-lg font-bold text-slate-900 dark:text-white">InterviewAI</span>
         </div>
         <h1 className="mb-6 text-xl font-bold text-slate-900 dark:text-white">Sign in</h1>
@@ -47,7 +47,7 @@ const Login = () => {
           value={form.email}
           onChange={onChange}
           placeholder="Email"
-          className="mb-3 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:ring-2 focus:ring-indigo-500 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
+          className="mb-3 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:ring-2 focus:ring-brand-500 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
         />
         <input
           name="password"
@@ -56,12 +56,12 @@ const Login = () => {
           value={form.password}
           onChange={onChange}
           placeholder="Password"
-          className="mb-5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:ring-2 focus:ring-indigo-500 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
+          className="mb-5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:ring-2 focus:ring-brand-500 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
         />
         <button
           type="submit"
           disabled={submitting}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 font-medium text-white transition hover:bg-indigo-700 disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-brand-600 to-brand-500 shadow-lg shadow-brand-500/20 px-4 py-2.5 font-medium text-white transition hover:from-brand-700 hover:to-brand-600 disabled:opacity-60"
         >
           {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
           Sign in
@@ -69,7 +69,7 @@ const Login = () => {
 
         <p className="mt-4 text-center text-sm text-slate-500 dark:text-slate-400">
           No account?{' '}
-          <Link to="/register" className="font-medium text-indigo-600 hover:underline">
+          <Link to="/register" className="font-medium text-brand-600 hover:underline">
             Register
           </Link>
         </p>

@@ -100,7 +100,7 @@ export const buildReportHtml = (session) => {
       return `
       <div style="page-break-inside:avoid;margin-bottom:28px;">
         <div style="display:flex;align-items:center;margin-bottom:8px;">
-          <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:#4F46E5;color:#fff;font-size:13px;font-weight:bold;margin-right:10px;">${i + 1}</span>
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:#6D28D9;color:#fff;font-size:13px;font-weight:bold;margin-right:10px;">${i + 1}</span>
           <span style="font-size:12px;text-transform:uppercase;letter-spacing:0.05em;color:#6B7280;">${esc(CATEGORY_LABEL[q.category] || q.category || '')}</span>
         </div>
         <p style="font-size:15px;font-weight:bold;color:#111827;margin:0 0 10px;">${esc(q.questionText)}</p>
@@ -121,7 +121,7 @@ export const buildReportHtml = (session) => {
   const tagSpans = tags
     .map(
       (t) =>
-        `<span style="display:inline-block;background:#EEF2FF;color:#4F46E5;border-radius:9999px;padding:6px 14px;font-size:13px;margin:0 8px 8px 0;">${esc(t)}</span>`
+        `<span style="display:inline-block;background:#F5F3FF;color:#6D28D9;border-radius:9999px;padding:6px 14px;font-size:13px;margin:0 8px 8px 0;">${esc(t)}</span>`
     )
     .join('');
 
@@ -131,7 +131,7 @@ export const buildReportHtml = (session) => {
 
   <!-- PAGE 1: COVER -->
   <section style="min-height:297mm;padding:60px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:#ffffff;">
-    <div style="font-size:42px;font-weight:bold;color:#4F46E5;margin-bottom:40px;">InterviewAI</div>
+    <div style="font-size:42px;font-weight:bold;color:#6D28D9;margin-bottom:40px;">InterviewAI</div>
     <div style="font-size:36px;font-weight:bold;margin-bottom:8px;">${esc(user.name || 'Candidate')}</div>
     <div style="font-size:20px;color:#6B7280;margin-bottom:6px;">${esc(session.jobRole || '')}</div>
     <div style="font-size:14px;color:#9CA3AF;margin-bottom:40px;">${fmtDate(session.completedAt || session.createdAt)} &middot; ${esc(timeSpent)} min</div>
@@ -141,7 +141,7 @@ export const buildReportHtml = (session) => {
         stroke-dasharray="${dash} ${circumference}" transform="rotate(-90 100 100)"/>
       <text x="100" y="112" text-anchor="middle" font-size="44" font-weight="bold" fill="${color}">${score}</text>
     </svg>
-    <div style="background:#4F46E5;color:#ffffff;border-radius:9999px;padding:10px 24px;font-size:14px;font-weight:bold;">AI-Powered Interview Report</div>
+    <div style="background:#6D28D9;color:#ffffff;border-radius:9999px;padding:10px 24px;font-size:14px;font-weight:bold;">AI-Powered Interview Report</div>
   </section>
 
   <!-- PAGE 2: SUMMARY -->
@@ -151,7 +151,7 @@ export const buildReportHtml = (session) => {
 
     <div style="display:flex;gap:16px;margin-bottom:32px;">
       <div style="flex:1;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:12px;padding:20px;text-align:center;">
-        <div style="font-size:28px;font-weight:bold;color:#4F46E5;">${answered}</div>
+        <div style="font-size:28px;font-weight:bold;color:#6D28D9;">${answered}</div>
         <div style="font-size:12px;color:#6B7280;">Questions Answered</div>
       </div>
       <div style="flex:1;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:12px;padding:20px;text-align:center;">
@@ -159,7 +159,7 @@ export const buildReportHtml = (session) => {
         <div style="font-size:12px;color:#6B7280;">Avg Score</div>
       </div>
       <div style="flex:1;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:12px;padding:20px;text-align:center;">
-        <div style="font-size:28px;font-weight:bold;color:#4F46E5;">${esc(timeSpent)}m</div>
+        <div style="font-size:28px;font-weight:bold;color:#6D28D9;">${esc(timeSpent)}m</div>
         <div style="font-size:12px;color:#6B7280;">Time Spent</div>
       </div>
     </div>
