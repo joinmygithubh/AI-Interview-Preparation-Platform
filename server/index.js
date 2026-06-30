@@ -13,7 +13,7 @@ import errorHandler from './middleware/errorHandler.js';
 import authRoutes from './routes/auth.js';
 import resumeRoutes from './routes/resume.js';
 import interviewRoutes from './routes/interview.js';
-import reportRoutes from './routes/reportRoutes.js';
+import reportRoutes from './routes/report.js';
 import userRoutes from './routes/user.js';
 
 dotenv.config();
