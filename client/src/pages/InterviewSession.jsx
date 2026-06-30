@@ -14,7 +14,7 @@ const CATEGORY_STYLES = {
   behavioral:
     'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300',
   situational:
-    'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
+    'bg-warning-500/10 text-warning-500 dark:bg-warning-500/20 dark:text-warning-400',
 };
 
 const DIFFICULTY_STYLES = {
@@ -26,9 +26,9 @@ const DIFFICULTY_STYLES = {
 
 /** Timer ring color by fraction of time remaining. */
 const timerStroke = (fraction) => {
-  if (fraction > 0.5) return '#22c55e';
-  if (fraction >= 0.25) return '#f59e0b';
-  return '#ef4444';
+  if (fraction > 0.5) return '#10B981';
+  if (fraction >= 0.25) return '#F59E0B';
+  return '#EF4444';
 };
 
 const TimerRing = ({ secondsLeft, totalSeconds }) => {
@@ -172,15 +172,15 @@ const InterviewSession = () => {
 
   if (loading) {
     return (
-      <div className="flex h-[60vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-indigo-500" />
+      <div className="flex min-h-screen items-center justify-center bg-surface-light dark:bg-surface-dark">
+        <Loader2 className="h-8 w-8 animate-spin text-brand-500" />
       </div>
     );
   }
 
   if (status === 'error' || !currentQuestion) {
     return (
-      <div className="flex h-[60vh] items-center justify-center text-slate-500">
+      <div className="flex min-h-screen items-center justify-center bg-surface-light text-slate-500 dark:bg-surface-dark dark:text-slate-400">
         Unable to load this interview session.
       </div>
     );
@@ -190,7 +190,7 @@ const InterviewSession = () => {
   const answered = Boolean(currentAnswer);
 
   return (
-    <div className="min-h-screen pb-24">
+    <div className="min-h-screen bg-surface-light pb-24 dark:bg-surface-dark">
       {/* Top progress */}
       <div className="mx-auto max-w-6xl px-4 pt-6">
         <div className="mb-2 flex items-center justify-between text-sm text-slate-500 dark:text-slate-400">
@@ -200,7 +200,7 @@ const InterviewSession = () => {
         </div>
         <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
           <motion.div
-            className="h-full rounded-full bg-indigo-600"
+            className="h-full rounded-full bg-gradient-to-r from-brand-600 to-brand-500 shadow-lg shadow-brand-500/20"
             initial={false}
             animate={{ width: `${progressPct}%` }}
             transition={{ ease: 'easeOut', duration: 0.4 }}
@@ -248,7 +248,7 @@ const InterviewSession = () => {
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   placeholder="Type or dictate your answer..."
-                  className="min-h-32 w-full resize-none rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 p-3 text-slate-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="min-h-32 w-full resize-none rounded-xl border border-slate-300 dark:border-slate-700 bg-surface-light dark:bg-slate-800/60 p-3 text-slate-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-brand-500"
                 />
                 <div className="mt-1 flex items-center justify-between text-xs text-slate-400">
                   <span>{wordCount} words</span>
@@ -262,7 +262,7 @@ const InterviewSession = () => {
                   className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition ${
                     recording
                       ? 'border-red-300 bg-red-50 text-red-600 dark:border-red-700 dark:bg-red-950/30'
-                      : 'border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+                      : 'border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-surface-light dark:hover:bg-slate-800'
                   }`}
                 >
                   {recording && (
@@ -277,7 +277,7 @@ const InterviewSession = () => {
                 type="button"
                 onClick={handleSubmit}
                 disabled={submitting}
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 font-medium text-white transition hover:bg-indigo-700 disabled:opacity-60"
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-brand-600 to-brand-500 shadow-lg shadow-brand-500/20 px-4 py-2.5 font-medium text-white transition hover:from-brand-700 hover:to-brand-600 disabled:opacity-60"
               >
                 {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
                 {submitting ? 'Scoring...' : 'Submit answer'}
@@ -294,7 +294,7 @@ const InterviewSession = () => {
                     type="button"
                     onClick={endSession}
                     disabled={ending}
-                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-2.5 font-medium text-white transition hover:bg-green-700 disabled:opacity-60"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-success-500 px-4 py-2.5 font-medium text-white transition hover:bg-success-600 disabled:opacity-60"
                   >
                     {ending ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -307,7 +307,7 @@ const InterviewSession = () => {
                   <button
                     type="button"
                     onClick={nextQuestion}
-                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 font-medium text-white transition hover:bg-indigo-700"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-brand-600 to-brand-500 shadow-lg shadow-brand-500/20 px-4 py-2.5 font-medium text-white transition hover:from-brand-700 hover:to-brand-600"
                   >
                     Next question <ArrowRight className="h-4 w-4" />
                   </button>
@@ -319,7 +319,7 @@ const InterviewSession = () => {
       </div>
 
       {/* Bottom bar */}
-      <div className="fixed inset-x-0 bottom-0 border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+      <div className="fixed inset-x-0 bottom-0 border-t border-slate-200/60 dark:border-slate-700/60 bg-surface-light dark:bg-slate-800/60">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 text-sm">
           <div className="flex items-center gap-4 text-slate-600 dark:text-slate-300">
             <span className="tabular-nums">{elapsedFormatted}</span>
@@ -331,7 +331,7 @@ const InterviewSession = () => {
           <button
             type="button"
             onClick={() => setShowConfirm(true)}
-            className="rounded-lg border border-slate-300 dark:border-slate-600 px-3 py-1.5 font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700"
+            className="rounded-lg border border-danger-500 px-3 py-1.5 font-medium text-danger-500 transition hover:bg-danger-500/10"
           >
             End early
           </button>
@@ -349,7 +349,7 @@ const InterviewSession = () => {
             onClick={() => setShowConfirm(false)}
           >
             <motion.div
-              className="w-full max-w-sm rounded-2xl bg-white dark:bg-slate-900 p-6 shadow-xl"
+              className="w-full max-w-sm rounded-2xl bg-surface-light dark:bg-slate-800/60 p-6 shadow-xl"
               initial={{ scale: 0.95 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.95 }}
@@ -366,7 +366,7 @@ const InterviewSession = () => {
                 <button
                   type="button"
                   onClick={() => setShowConfirm(false)}
-                  className="flex-1 rounded-lg border border-slate-300 dark:border-slate-600 px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                  className="flex-1 rounded-lg border border-slate-300 dark:border-slate-600 px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-surface-light dark:hover:bg-slate-800"
                 >
                   Keep going
                 </button>
@@ -377,7 +377,7 @@ const InterviewSession = () => {
                     endSession();
                   }}
                   disabled={ending}
-                  className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-60"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-danger-500 px-4 py-2 text-sm font-medium text-white hover:bg-danger-400 disabled:opacity-60"
                 >
                   {ending && <Loader2 className="h-4 w-4 animate-spin" />}
                   End now

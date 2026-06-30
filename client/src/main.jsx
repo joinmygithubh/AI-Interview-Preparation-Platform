@@ -7,10 +7,8 @@ import App from './App';
 import ErrorBoundary from './components/ErrorBoundary';
 import './index.css';
 
-// Apply persisted theme before first paint (class strategy).
-if (localStorage.getItem('theme') === 'dark') {
-  document.documentElement.classList.add('dark');
-}
+// Theme mode (light/dark/mono) is applied pre-paint by an inline script in
+// index.html, then managed by the ThemeSelector component.
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>

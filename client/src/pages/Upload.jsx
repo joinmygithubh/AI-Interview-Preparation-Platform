@@ -105,11 +105,11 @@ const UploadPage = () => {
         onDrop={handleDrop}
         className={`flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed p-10 text-center transition ${
           dragging
-            ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-950/30'
-            : 'border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800'
+            ? 'border-brand-500 bg-brand-50 dark:bg-brand-950/30'
+            : 'border-slate-300 dark:border-slate-600 bg-surface-light dark:bg-slate-800'
         }`}
       >
-        <UploadCloud className="h-10 w-10 text-indigo-500" />
+        <UploadCloud className="h-10 w-10 text-brand-500" />
         <div>
           <p className="font-medium text-slate-700 dark:text-slate-200">
             Drag &amp; drop your resume here
@@ -139,7 +139,7 @@ const UploadPage = () => {
           </div>
           <div className="h-2.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
             <motion.div
-              className="h-full rounded-full bg-indigo-600"
+              className="h-full rounded-full bg-brand-600"
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
               transition={{ ease: 'easeOut', duration: 0.3 }}
@@ -161,7 +161,7 @@ const UploadPage = () => {
           <button
             type="button"
             onClick={() => setModalOpen(true)}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-3 font-medium text-white transition hover:bg-indigo-700"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-brand-600 to-brand-500 shadow-lg shadow-brand-500/20 px-4 py-3 font-medium text-white transition hover:from-brand-700 hover:to-brand-600"
           >
             <Play className="h-4 w-4" /> Start interview
           </button>

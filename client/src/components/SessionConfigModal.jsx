@@ -68,7 +68,7 @@ const SessionConfigModal = ({ isOpen, onClose, resumeId }) => {
           onClick={onClose}
         >
           <motion.div
-            className="w-full max-w-md rounded-2xl bg-white dark:bg-slate-900 p-6 shadow-xl"
+            className="w-full max-w-md rounded-2xl bg-surface-light dark:bg-slate-800/60 p-6 shadow-xl"
             initial={{ scale: 0.95, y: 10 }}
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.95, y: 10 }}
@@ -97,7 +97,7 @@ const SessionConfigModal = ({ isOpen, onClose, resumeId }) => {
               value={jobRole}
               onChange={(e) => setJobRole(e.target.value)}
               placeholder="e.g. Backend Engineer"
-              className="mb-4 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-slate-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-indigo-500"
+              className="mb-4 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-surface-light dark:bg-slate-800/60 px-3 py-2 text-slate-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-brand-500"
             />
             <datalist id="role-suggestions">
               {ROLE_SUGGESTIONS.map((r) => (
@@ -117,7 +117,7 @@ const SessionConfigModal = ({ isOpen, onClose, resumeId }) => {
                   onClick={() => setDifficulty(d)}
                   className={`rounded-full px-4 py-2 text-sm font-medium capitalize transition ${
                     difficulty === d
-                      ? 'bg-indigo-600 text-white'
+                      ? 'bg-gradient-to-r from-brand-600 to-brand-500 shadow-lg shadow-brand-500/20 text-white'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
                   }`}
                 >
@@ -132,7 +132,7 @@ const SessionConfigModal = ({ isOpen, onClose, resumeId }) => {
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
                   Number of questions
                 </label>
-                <span className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">
+                <span className="text-sm font-semibold text-brand-600 dark:text-brand-400">
                   {count}
                 </span>
               </div>
@@ -142,7 +142,7 @@ const SessionConfigModal = ({ isOpen, onClose, resumeId }) => {
                 max={15}
                 value={count}
                 onChange={(e) => setCount(Number(e.target.value))}
-                className="w-full accent-indigo-600"
+                className="w-full accent-brand-600"
               />
             </div>
 
@@ -150,7 +150,7 @@ const SessionConfigModal = ({ isOpen, onClose, resumeId }) => {
               type="button"
               onClick={handleGenerate}
               disabled={submitting}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 font-medium text-white transition hover:bg-indigo-700 disabled:opacity-60"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-brand-600 to-brand-500 shadow-lg shadow-brand-500/20 px-4 py-2.5 font-medium text-white transition hover:from-brand-700 hover:to-brand-600 disabled:opacity-60"
             >
               {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
               {submitting ? 'Generating...' : 'Generate questions'}

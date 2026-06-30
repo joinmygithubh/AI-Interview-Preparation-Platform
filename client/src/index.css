@@ -1,4 +1,36 @@
-/* TODO: Tailwind directives and global styles */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-surface-light font-body text-slate-900 dark:bg-surface-dark dark:text-slate-100;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display;
+  }
+}
+
+/*
+ * Black & White ("mono") theme — intentionally stark, like a print document.
+ * Grayscale everything, force pure white background + black borders.
+ */
+html.theme-mono {
+  filter: grayscale(1);
+  background-color: #ffffff;
+}
+html.theme-mono body {
+  background-color: #ffffff;
+  color: #000000;
+}
+.theme-mono [class*='border'] {
+  border-color: #000000 !important;
+  border-width: 1.5px;
+}
+/* The signature score glow is removed in mono mode */
+.theme-mono .score-glow {
+  display: none;
+}
