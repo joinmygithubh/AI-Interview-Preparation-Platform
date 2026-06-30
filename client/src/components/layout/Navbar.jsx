@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Brain, Sun, Moon, Menu, X, LogOut } from 'lucide-react';
 
 import api from '../../services/api';
@@ -20,13 +20,14 @@ const initialsOf = (name = '') =>
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [user, setUser] = useState(null);
   const [dark, setDark] = useState(
     () =>
       typeof document !== 'undefined' &&
       document.documentElement.classList.contains('dark')
   );
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -38,6 +39,11 @@ const Navbar = () => {
       active = false;
     };
   }, []);
+
+  // Close the mobile menu whenever the route changes.
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
 
   const toggleTheme = () => {
     const el = document.documentElement;
@@ -109,24 +115,24 @@ const Navbar = () => {
           {/* Mobile hamburger */}
           <button
             type="button"
-            onClick={() => setMobileOpen((v) => !v)}
+            onClick={() => setMenuOpen((v) => !v)}
             className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 md:hidden"
             aria-label="Menu"
           >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </nav>
 
       {/* Mobile slide-down */}
-      {mobileOpen && (
+      {menuOpen && (
         <div className="border-t border-slate-200 dark:border-slate-700 md:hidden">
           <div className="space-y-1 px-4 py-3">
             {NAV_LINKS.map((l) => (
               <NavLink
                 key={l.to}
                 to={l.to}
-                onClick={() => setMobileOpen(false)}
+                onClick={() => setMenuOpen(false)}
                 className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
               >
                 {l.label}
