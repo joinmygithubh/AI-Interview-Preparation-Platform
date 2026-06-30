@@ -11,7 +11,7 @@ import initSocket from './socket/index.js';
 import errorHandler from './middleware/errorHandler.js';
 
 import authRoutes from './routes/auth.js';
-import resumeRoutes from './routes/resumeRoutes.js';
+import resumeRoutes from './routes/resume.js';
 import interviewRoutes from './routes/interviewRoutes.js';
 import reportRoutes from './routes/reportRoutes.js';
 import userRoutes from './routes/user.js';

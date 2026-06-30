@@ -1,1 +1,34 @@
-// TODO: axios instance with base URL and JWT Bearer interceptor
+import axios from 'axios';
+
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+/**
+ * Shared axios instance.
+ * - Prefixes all requests with the API base URL
+ * - Attaches the JWT Bearer token (if present) on every request
+ * - Surfaces 401s by clearing the stored token
+ */
+const api = axios.create({
+  baseURL: API_BASE_URL,
+});
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+    }
+    return Promise.reject(error);
+  }
+);
+
+export default api;
