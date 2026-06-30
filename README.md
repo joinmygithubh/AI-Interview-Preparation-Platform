@@ -60,6 +60,32 @@ cd client && npm run dev      # http://localhost:5173
 
 Required `.env` keys: `MONGODB_URI`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `OPENAI_API_KEY`, `OPENAI_MODEL`, `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`, `CLIENT_URL`, and the `SMTP_*` / `FROM_EMAIL` values.
 
+### 🍃 MongoDB setup
+
+The server connects to whatever `MONGODB_URI` points at — use a local instance or MongoDB Atlas.
+
+**Local (quickest)**
+
+```bash
+# via Docker
+docker run -d --name mongo -p 27017:27017 mongo:7
+# .env
+MONGODB_URI=mongodb://localhost:27017/ai-interview-coach
+```
+
+**MongoDB Atlas (cloud / production)**
+
+1. Create a free cluster at [cloud.mongodb.com](https://cloud.mongodb.com).
+2. **Database Access** → add a user (username + password).
+3. **Network Access** → allow your IP (or `0.0.0.0/0` while testing).
+4. **Database → Connect → Drivers** → copy the connection string and set it in `.env`:
+
+```bash
+MONGODB_URI=mongodb+srv://<user>:<password>@<cluster>.xxxxx.mongodb.net/interview-coach?retryWrites=true&w=majority
+```
+
+> Replace `<user>`, `<password>`, and the cluster host; URL-encode any special characters in the password. No code changes are needed — `connectDB()` reads `MONGODB_URI` and retries the connection automatically.
+
 ### 🐳 Run with Docker
 
 ```bash
