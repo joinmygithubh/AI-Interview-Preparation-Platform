@@ -172,7 +172,7 @@ const InterviewSession = () => {
 
   if (loading) {
     return (
-      <div className="flex h-[60vh] items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-900">
         <Loader2 className="h-8 w-8 animate-spin text-indigo-500" />
       </div>
     );
@@ -180,7 +180,7 @@ const InterviewSession = () => {
 
   if (status === 'error' || !currentQuestion) {
     return (
-      <div className="flex h-[60vh] items-center justify-center text-slate-500">
+      <div className="flex min-h-screen items-center justify-center bg-slate-50 text-slate-500 dark:bg-slate-900 dark:text-slate-400">
         Unable to load this interview session.
       </div>
     );
@@ -190,7 +190,7 @@ const InterviewSession = () => {
   const answered = Boolean(currentAnswer);
 
   return (
-    <div className="min-h-screen pb-24">
+    <div className="min-h-screen bg-slate-50 pb-24 dark:bg-slate-900">
       {/* Top progress */}
       <div className="mx-auto max-w-6xl px-4 pt-6">
         <div className="mb-2 flex items-center justify-between text-sm text-slate-500 dark:text-slate-400">
