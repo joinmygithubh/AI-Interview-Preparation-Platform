@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 import InterviewSession from '../models/InterviewSession.js';
 import Resume from '../models/Resume.js';
+import Report from '../models/Report.js';
 import User from '../models/User.js';
 import {
   generateInterviewQuestions,
@@ -23,12 +24,21 @@ const httpError = (status, message) => {
 const normalizeQuestion = (q, fallbackDifficulty) => {
   const category = String(q?.category || '').toLowerCase();
   const difficulty = String(q?.difficulty || '').toLowerCase();
+
+  // Clamp the recommended time to a sensible 60–180s window when provided.
+  let timeRecommended;
+  if (Number.isFinite(Number(q?.timeRecommended))) {
+    timeRecommended = Math.min(180, Math.max(60, Math.round(Number(q.timeRecommended))));
+  }
+
   return {
     questionText: q?.questionText || q?.question || '',
     category: VALID_CATEGORIES.includes(category) ? category : 'technical',
     difficulty: VALID_DIFFICULTIES.includes(difficulty)
       ? difficulty
       : fallbackDifficulty,
+    expectedKeyPoints: Array.isArray(q?.expectedKeyPoints) ? q.expectedKeyPoints : [],
+    timeRecommended,
     userAnswer: '',
     timeSpent: 0,
   };
@@ -88,20 +98,45 @@ export const startSession = async (
 };
 
 /**
- * Paginated session history for a user.
+ * Paginated session history for a user, with optional filtering and sorting.
  */
-export const getHistory = async (userId, { page = 1, limit = 10 } = {}) => {
+export const getHistory = async (
+  userId,
+  { page = 1, limit = 10, difficulty, minScore, dateFrom, dateTo, sort = 'newest' } = {}
+) => {
   const pageNum = Math.max(1, parseInt(page, 10) || 1);
   const limitNum = Math.max(1, parseInt(limit, 10) || 10);
   const skip = (pageNum - 1) * limitNum;
 
+  // Build the filter query.
+  const query = { userId };
+  if (difficulty && VALID_DIFFICULTIES.includes(difficulty)) {
+    query.difficulty = difficulty;
+  }
+  if (minScore !== undefined && minScore !== '' && !Number.isNaN(Number(minScore))) {
+    query.overallScore = { $gte: Number(minScore) };
+  }
+  if (dateFrom || dateTo) {
+    query.createdAt = {};
+    if (dateFrom) query.createdAt.$gte = new Date(dateFrom);
+    if (dateTo) query.createdAt.$lte = new Date(`${dateTo}T23:59:59.999Z`);
+  }
+
+  const SORTS = {
+    newest: { createdAt: -1 },
+    oldest: { createdAt: 1 },
+    highest: { overallScore: -1 },
+    lowest: { overallScore: 1 },
+  };
+  const sortSpec = SORTS[sort] || SORTS.newest;
+
   const [sessions, total] = await Promise.all([
-    InterviewSession.find({ userId })
-      .sort({ createdAt: -1 })
+    InterviewSession.find(query)
+      .sort(sortSpec)
       .skip(skip)
       .limit(limitNum)
       .populate('resumeId', 'originalName'),
-    InterviewSession.countDocuments({ userId }),
+    InterviewSession.countDocuments(query),
   ]);
 
   return {
@@ -163,6 +198,7 @@ export const submitAnswer = async (
   question.aiScore =
     typeof evaluation.score === 'number' ? evaluation.score : undefined;
   question.aiFeedback = evaluation.feedback || '';
+  question.exampleAnswer = evaluation.exampleAnswer || '';
 
   await session.save();
 
@@ -224,10 +260,21 @@ export const completeSession = async (userId, sessionId) => {
   return session;
 };
 
+/**
+ * Delete a session (and its report), enforcing ownership.
+ */
+export const deleteSession = async (userId, sessionId) => {
+  const session = await getSession(userId, sessionId);
+  await Report.deleteOne({ sessionId: session._id });
+  await session.deleteOne();
+  return { deleted: true };
+};
+
 export default {
   startSession,
   getHistory,
   getSession,
   submitAnswer,
   completeSession,
+  deleteSession,
 };

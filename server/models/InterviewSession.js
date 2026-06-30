@@ -29,6 +29,17 @@ const questionSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    expectedKeyPoints: {
+      type: [String],
+      default: [],
+    },
+    exampleAnswer: {
+      type: String,
+      default: '',
+    },
+    timeRecommended: {
+      type: Number, // seconds
+    },
     timeSpent: {
       type: Number, // seconds
       default: 0,

@@ -8,6 +8,7 @@ import {
   getSession,
   submitAnswer,
   completeSession,
+  deleteSession,
 } from '../services/interviewService.js';
 
 const router = Router();
@@ -32,15 +33,23 @@ router.post(
 );
 
 /**
- * GET /api/interview/history?page=&limit=
- * Paginated session history.
+ * GET /api/interview/history?page=&limit=&difficulty=&minScore=&dateFrom=&dateTo=&sort=
+ * Paginated, filterable, sortable session history.
  */
 router.get(
   '/history',
   auth,
   asyncHandler(async (req, res) => {
-    const { page, limit } = req.query;
-    const result = await getHistory(req.user._id, { page, limit });
+    const { page, limit, difficulty, minScore, dateFrom, dateTo, sort } = req.query;
+    const result = await getHistory(req.user._id, {
+      page,
+      limit,
+      difficulty,
+      minScore,
+      dateFrom,
+      dateTo,
+      sort,
+    });
     res.json({ success: true, data: result });
   })
 );
@@ -86,6 +95,19 @@ router.post(
   asyncHandler(async (req, res) => {
     const session = await completeSession(req.user._id, req.params.id);
     res.json({ success: true, data: session });
+  })
+);
+
+/**
+ * DELETE /api/interview/:id
+ * Delete a session (and its report). Ownership enforced.
+ */
+router.delete(
+  '/:id',
+  auth,
+  asyncHandler(async (req, res) => {
+    await deleteSession(req.user._id, req.params.id);
+    res.json({ success: true, message: 'Session deleted' });
   })
 );
 
