@@ -1,0 +1,32 @@
+{
+  "name": "ai-interview-coach-server",
+  "version": "0.1.0",
+  "description": "Backend for AI Interview Coach",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "mongoose": "^8.6.3",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "dotenv": "^16.4.5",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "cloudinary": "^2.5.0",
+    "openai": "^4.63.0",
+    "socket.io": "^4.7.5",
+    "nodemailer": "^6.9.15",
+    "puppeteer": "^23.4.0",
+    "express-rate-limit": "^7.4.0",
+    "express-validator": "^7.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
