@@ -7,12 +7,12 @@ import morgan from 'morgan';
 import { Server as SocketIOServer } from 'socket.io';
 
 import connectDB from './config/db.js';
-import initSocket from './socket/index.js';
+import { initSocket } from './socket/interviewSocket.js';
 import errorHandler from './middleware/errorHandler.js';
 
 import authRoutes from './routes/auth.js';
 import resumeRoutes from './routes/resume.js';
-import interviewRoutes from './routes/interviewRoutes.js';
+import interviewRoutes from './routes/interview.js';
 import reportRoutes from './routes/reportRoutes.js';
 import userRoutes from './routes/user.js';
 
