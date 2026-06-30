@@ -1,6 +1,8 @@
 import openai from '../config/openai.js';
 
-const MODEL = 'gpt-4o-mini';
+// Model is configurable so the same code works with OpenAI (gpt-4o-mini) or any
+// OpenAI-compatible provider (e.g. Google Gemini: gemini-2.0-flash).
+const MODEL = process.env.OPENAI_MODEL || 'gpt-4o-mini';
 
 /**
  * Strip markdown code fences and parse JSON from a model response.

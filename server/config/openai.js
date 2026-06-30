@@ -19,7 +19,12 @@ const getClient = () => {
     );
   }
 
-  client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  client = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+    // Optional: point at any OpenAI-compatible endpoint (e.g. Google Gemini:
+    // https://generativelanguage.googleapis.com/v1beta/openai/).
+    ...(process.env.OPENAI_BASE_URL ? { baseURL: process.env.OPENAI_BASE_URL } : {}),
+  });
   return client;
 };
 
