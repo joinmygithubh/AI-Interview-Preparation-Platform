@@ -163,15 +163,38 @@ const Results = () => {
   const downloadReport = async () => {
     setDownloading(true);
     try {
-      const { data } = await api.get(`/report/${id}`);
-      const url = data.data?.pdfUrl || data.data?.url;
-      if (url) {
-        window.open(url, '_blank', 'noopener');
-      } else {
-        toast.error('Report not available yet');
-      }
+      // Stream the PDF straight from the API (sends the JWT via the axios
+      // interceptor) and save it as a blob — no Cloudinary redirect involved.
+      const { data, headers } = await api.get(`/report/${id}/download`, {
+        responseType: 'blob',
+      });
+
+      const disposition = headers['content-disposition'] || '';
+      const match = disposition.match(/filename="?([^"]+)"?/);
+      const filename = match?.[1] || `interview-report-${id}.pdf`;
+
+      const blob = new Blob([data], {
+        type: headers['content-type'] || 'application/pdf',
+      });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      toast.success('Report downloaded');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Could not generate report');
+      // With responseType 'blob' an error body is a Blob, so read it as text.
+      let message = 'Could not generate report';
+      try {
+        const text = await err.response?.data?.text?.();
+        if (text) message = JSON.parse(text).message || message;
+      } catch {
+        /* fall back to the default message */
+      }
+      toast.error(message);
     } finally {
       setDownloading(false);
     }
