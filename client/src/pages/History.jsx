@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LayoutGrid, List, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -51,38 +51,29 @@ const History = () => {
   useEffect(() => {
     let active = true;
     setLoading(true);
+    const params = { page, limit: PAGE_SIZE, sort };
+    if (difficulty) params.difficulty = difficulty;
+    if (minScore !== '') params.minScore = minScore;
+    if (dateFrom) params.dateFrom = dateFrom;
+    if (dateTo) params.dateTo = dateTo;
+
     api
-      .get('/interview/history', { params: { page, limit: PAGE_SIZE } })
+      .get('/interview/history', { params })
       .then(({ data: res }) => active && setData(res.data))
       .catch(() => active && toast.error('Failed to load history'))
       .finally(() => active && setLoading(false));
     return () => {
       active = false;
     };
-  }, [page]);
+  }, [page, difficulty, minScore, dateFrom, dateTo, sort]);
 
-  // Filters + sort are applied to the current page (server paginates by page/limit).
-  const visible = useMemo(() => {
-    let list = [...(data.sessions || [])];
-    if (dateFrom) list = list.filter((s) => new Date(s.createdAt) >= new Date(dateFrom));
-    if (dateTo) list = list.filter((s) => new Date(s.createdAt) <= new Date(`${dateTo}T23:59:59`));
-    if (difficulty) list = list.filter((s) => s.difficulty === difficulty);
-    if (minScore !== '') list = list.filter((s) => (s.overallScore ?? 0) >= Number(minScore));
+  // Reset to page 1 whenever a filter/sort changes.
+  const onFilter = (setter) => (value) => {
+    setter(value);
+    setPage(1);
+  };
 
-    list.sort((a, b) => {
-      switch (sort) {
-        case 'oldest':
-          return new Date(a.createdAt) - new Date(b.createdAt);
-        case 'highest':
-          return (b.overallScore ?? 0) - (a.overallScore ?? 0);
-        case 'lowest':
-          return (a.overallScore ?? 0) - (b.overallScore ?? 0);
-        default:
-          return new Date(b.createdAt) - new Date(a.createdAt);
-      }
-    });
-    return list;
-  }, [data.sessions, dateFrom, dateTo, difficulty, minScore, sort]);
+  const sessions = data.sessions || [];
 
   const inputClass =
     'rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-indigo-500';
@@ -115,15 +106,15 @@ const History = () => {
       <div className="mb-6 flex flex-wrap items-end gap-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4">
         <label className="flex flex-col gap-1 text-xs text-slate-500 dark:text-slate-400">
           From
-          <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className={inputClass} />
+          <input type="date" value={dateFrom} onChange={(e) => onFilter(setDateFrom)(e.target.value)} className={inputClass} />
         </label>
         <label className="flex flex-col gap-1 text-xs text-slate-500 dark:text-slate-400">
           To
-          <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className={inputClass} />
+          <input type="date" value={dateTo} onChange={(e) => onFilter(setDateTo)(e.target.value)} className={inputClass} />
         </label>
         <label className="flex flex-col gap-1 text-xs text-slate-500 dark:text-slate-400">
           Difficulty
-          <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)} className={inputClass}>
+          <select value={difficulty} onChange={(e) => onFilter(setDifficulty)(e.target.value)} className={inputClass}>
             <option value="">All</option>
             <option value="easy">Easy</option>
             <option value="medium">Medium</option>
@@ -137,14 +128,14 @@ const History = () => {
             min="0"
             max="100"
             value={minScore}
-            onChange={(e) => setMinScore(e.target.value)}
+            onChange={(e) => onFilter(setMinScore)(e.target.value)}
             placeholder="0"
             className={`${inputClass} w-24`}
           />
         </label>
         <label className="ml-auto flex flex-col gap-1 text-xs text-slate-500 dark:text-slate-400">
           Sort
-          <select value={sort} onChange={(e) => setSort(e.target.value)} className={inputClass}>
+          <select value={sort} onChange={(e) => onFilter(setSort)(e.target.value)} className={inputClass}>
             <option value="newest">Newest</option>
             <option value="oldest">Oldest</option>
             <option value="highest">Highest score</option>
@@ -157,13 +148,13 @@ const History = () => {
         <div className="flex h-64 items-center justify-center">
           <Loader2 className="h-8 w-8 animate-spin text-indigo-500" />
         </div>
-      ) : !visible.length ? (
+      ) : !sessions.length ? (
         <div className="py-16 text-center text-slate-500 dark:text-slate-400">
           No sessions match your filters.
         </div>
       ) : view === 'card' ? (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {visible.map((s) => (
+          {sessions.map((s) => (
             <div
               key={s._id}
               className="flex flex-col gap-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5"
@@ -206,7 +197,7 @@ const History = () => {
               </tr>
             </thead>
             <tbody>
-              {visible.map((s) => (
+              {sessions.map((s) => (
                 <tr key={s._id} className="border-b border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-200">
                   <td className="p-4 whitespace-nowrap">{fmtDate(s.createdAt)}</td>
                   <td className="p-4">{s.jobRole}</td>
