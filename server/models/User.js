@@ -63,18 +63,9 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Hash the password before saving when it has been set/modified.
-userSchema.pre('save', async function hashPassword(next) {
-  if (!this.isModified('password')) return next();
-
-  try {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    return next();
-  } catch (err) {
-    return next(err);
-  }
-});
+// NOTE: Password hashing is performed explicitly in the auth controller
+// (routes/auth.js) using bcrypt with a cost factor of 12. We intentionally do
+// NOT hash in a pre('save') hook to avoid double-hashing.
 
 /**
  * Compare a plaintext password against the stored hash.

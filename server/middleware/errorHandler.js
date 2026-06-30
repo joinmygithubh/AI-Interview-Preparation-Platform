@@ -1,20 +1,22 @@
 /* eslint-disable no-unused-vars */
 /**
- * Centralized Express error handler.
- * Responds in the standard API shape: { success, data, message }.
- * Must be registered LAST, after all routes.
+ * Centralized Express error handler. Register LAST, after all routes.
+ *
+ * Maps known error types to status codes:
+ *  - Mongoose ValidationError      -> 400
+ *  - Duplicate key (code 11000)    -> 409 ("... already exists")
+ *  - JWT errors (invalid/expired)  -> 401
+ *  - Everything else               -> 500
+ *
+ * Always responds: { success: false, message, ...(stack in development) }
  */
+const isProd = () => process.env.NODE_ENV === 'production';
+
 const errorHandler = (err, req, res, next) => {
   let statusCode = err.statusCode || 500;
   let message = err.message || 'Internal Server Error';
 
-  // Mongoose: bad ObjectId
-  if (err.name === 'CastError') {
-    statusCode = 400;
-    message = `Invalid ${err.path}: ${err.value}`;
-  }
-
-  // Mongoose: validation error
+  // Mongoose validation error
   if (err.name === 'ValidationError') {
     statusCode = 400;
     message = Object.values(err.errors)
@@ -22,19 +24,25 @@ const errorHandler = (err, req, res, next) => {
       .join(', ');
   }
 
-  // Mongoose: duplicate key
-  if (err.code === 11000) {
+  // Mongoose bad ObjectId
+  else if (err.name === 'CastError') {
+    statusCode = 400;
+    message = `Invalid value for ${err.path}`;
+  }
+
+  // Duplicate key
+  else if (err.code === 11000) {
     statusCode = 409;
     const field = Object.keys(err.keyValue || {})[0] || 'field';
-    message = `Duplicate value for ${field}`;
+    const value = err.keyValue ? err.keyValue[field] : '';
+    message = `${field} '${value}' already exists`;
   }
 
   // JWT errors
-  if (err.name === 'JsonWebTokenError') {
+  else if (err.name === 'JsonWebTokenError') {
     statusCode = 401;
     message = 'Invalid token';
-  }
-  if (err.name === 'TokenExpiredError') {
+  } else if (err.name === 'TokenExpiredError') {
     statusCode = 401;
     message = 'Token expired';
   }
@@ -43,11 +51,17 @@ const errorHandler = (err, req, res, next) => {
     console.error(`[ERROR] ${req.method} ${req.originalUrl} ->`, err);
   }
 
-  res.status(statusCode).json({
+  const body = {
     success: false,
-    data: {},
     message,
-  });
+  };
+
+  // Expose stack traces only outside production to aid debugging.
+  if (!isProd()) {
+    body.stack = err.stack;
+  }
+
+  res.status(statusCode).json(body);
 };
 
 export default errorHandler;

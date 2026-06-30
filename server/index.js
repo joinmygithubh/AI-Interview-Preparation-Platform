@@ -10,11 +10,11 @@ import connectDB from './config/db.js';
 import initSocket from './socket/index.js';
 import errorHandler from './middleware/errorHandler.js';
 
-import authRoutes from './routes/authRoutes.js';
+import authRoutes from './routes/auth.js';
 import resumeRoutes from './routes/resumeRoutes.js';
 import interviewRoutes from './routes/interviewRoutes.js';
 import reportRoutes from './routes/reportRoutes.js';
-import userRoutes from './routes/userRoutes.js';
+import userRoutes from './routes/user.js';
 
 dotenv.config();
 
