@@ -213,41 +213,74 @@ const uploadPdf = (buffer) =>
     stream.end(buffer);
   });
 
+/** Build a filesystem-safe download filename for a session's report. */
+export const reportFileName = (session) => {
+  const slug =
+    (session?.userId?.name || 'candidate')
+      .toString()
+      .trim()
+      .replace(/[^a-z0-9]+/gi, '-')
+      .replace(/^-+|-+$/g, '')
+      .toLowerCase() || 'candidate';
+  return `interview-report-${slug}.pdf`;
+};
+
 /**
- * Generate (or regenerate) the PDF interview report and persist its URL.
+ * Render the interview report to a PDF buffer. No Cloudinary involved, so this
+ * works regardless of the Cloudinary account's PDF/raw delivery settings.
  * @param {string} sessionId
- * @returns {Promise<string>} the Cloudinary PDF URL
+ * @returns {Promise<{ buffer: Buffer, session: object }>}
  */
-export const generateInterviewReport = async (sessionId) => {
+export const renderReportPdf = async (sessionId) => {
   const session = await InterviewSession.findById(sessionId)
     .populate('userId')
     .populate('resumeId');
 
   if (!session) throw httpError(404, 'Session not found');
 
-  let report = await Report.findOne({ sessionId });
-
   const html = buildReportHtml(session);
 
   const browser = await puppeteer.launch({
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+    ],
   });
 
-  let pdfBuffer;
   try {
     const page = await browser.newPage();
     await page.setContent(html, { waitUntil: 'domcontentloaded' });
-    pdfBuffer = await page.pdf({
+    const buffer = await page.pdf({
       format: 'A4',
       printBackground: true,
       margin: { top: '0', bottom: '0' },
     });
+    return { buffer, session };
   } finally {
     await browser.close();
   }
+};
 
-  const uploadResult = await uploadPdf(pdfBuffer);
+/**
+ * Persist (or refresh) the report record for a session. Uploading to Cloudinary
+ * is best-effort: if the account blocks raw/PDF delivery or is misconfigured,
+ * we still save the report metadata so the direct-download endpoint keeps working.
+ * @returns {Promise<string|null>} the Cloudinary PDF URL, or null if upload failed
+ */
+export const persistReport = async (session, buffer) => {
+  const sessionId = session._id;
+  let report = await Report.findOne({ sessionId });
+
+  let pdfUrl = null;
+  try {
+    const uploadResult = await uploadPdf(buffer);
+    pdfUrl = uploadResult.secure_url;
+  } catch (err) {
+    // Non-fatal: the report is downloaded directly from the server.
+    console.warn(`[REPORT] Cloudinary upload skipped: ${err.message}`);
+  }
 
   const summary = session.aiSummary || {};
   if (!report) {
@@ -256,7 +289,7 @@ export const generateInterviewReport = async (sessionId) => {
       userId: session.userId?._id || session.userId,
     });
   }
-  report.pdfUrl = uploadResult.secure_url;
+  if (pdfUrl) report.pdfUrl = pdfUrl;
   report.generatedAt = new Date();
   report.strengths = summary.strengths || [];
   report.weaknesses = summary.weaknesses || [];
@@ -264,7 +297,24 @@ export const generateInterviewReport = async (sessionId) => {
   report.scoreBreakdown = summary.skillsAnalysis || {};
   await report.save();
 
-  return report.pdfUrl;
+  return pdfUrl;
 };
 
-export default { generateInterviewReport, buildReportHtml };
+/**
+ * Generate the PDF, upload it to Cloudinary (best-effort), and persist its URL.
+ * Retained for callers that want a hosted URL.
+ * @param {string} sessionId
+ * @returns {Promise<string|null>} the Cloudinary PDF URL (or null on upload failure)
+ */
+export const generateInterviewReport = async (sessionId) => {
+  const { buffer, session } = await renderReportPdf(sessionId);
+  return persistReport(session, buffer);
+};
+
+export default {
+  generateInterviewReport,
+  renderReportPdf,
+  persistReport,
+  reportFileName,
+  buildReportHtml,
+};
