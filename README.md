@@ -85,6 +85,7 @@ docker compose up --build
 | PUT | `/api/interview/:id/answer` | ✅ | Score & save a single answer |
 | POST | `/api/interview/:id/complete` | ✅ | Finalize session + AI summary |
 | GET | `/api/report/:sessionId` | ✅ | Get or generate the PDF report URL |
+| GET | `/api/report/:sessionId/download` | ✅ | Stream the PDF report directly (no Cloudinary) |
 | GET | `/api/health` | ❌ | Health check |
 
 > Authenticated requests require an `Authorization: Bearer <token>` header. Real-time events (`join_session`, `submit_answer`, `end_session`, `typing`) run over Socket.IO with the JWT passed in the handshake `auth.token`.
