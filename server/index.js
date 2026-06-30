@@ -1,5 +1,5 @@
+import 'dotenv/config';
 import http from 'http';
-import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -16,8 +16,6 @@ import resumeRoutes from './routes/resume.js';
 import interviewRoutes from './routes/interview.js';
 import reportRoutes from './routes/report.js';
 import userRoutes from './routes/user.js';
-
-dotenv.config();
 
 const PORT = process.env.PORT || 5000;
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
